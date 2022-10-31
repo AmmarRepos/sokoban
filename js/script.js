@@ -6,40 +6,29 @@ var levels = [tileMap01, tileMap02, tileMap03];
 var level = 0;
 var temp = "E";
 var map;
-/*var map = levels[level].mapGrid;*/
-
-/*function buildMap(currentLevel) {
-  var map = levels[currentLevel].mapGrid;
-  map.forEach((row, y) => {
-    row.forEach((value, x) => {
-      let element = document.createElement("div");
-      gamemap.appendChild(element).className = value[0];
-      gamemap.appendChild(element).id = `${y},${x}`;
-    });
-  });
-}*/
 
 function board(currentLevel) {
   const input_map = levels[currentLevel].mapGrid;
-  let output_map = [];
+  let board_struct = new Map();
   input_map.forEach((row, y) => {
     row.forEach((value, x) => {
-      if (value[0] == " ") output_map.push([x, y, "E"]);
-      else output_map.push([x, y, value[0]]);
+      if (value[0] == " ") board_struct.set(`${x},${y}`, "E");
+      else board_struct.set(`${x},${y}`, value[0]);
     });
   });
-  return output_map;
+  return board_struct;
 }
 
 function drawBoard(board) {
   document.getElementById("gamemap").remove();
   let gamemap = document.createElement("div");
   document.body.appendChild(gamemap).id = "gamemap";
-  board.forEach((block) => {
+  const iterator1 = board[Symbol.iterator]();
+  for (const item of iterator1) {
     let element = document.createElement("div");
-    gamemap.appendChild(element).id = `${block[1]},${block[0]}`;
-    gamemap.appendChild(element).className = block[2];
-  });
+    gamemap.appendChild(element).id = item[0];
+    gamemap.appendChild(element).className = item[1];
+  }
 }
 
 var nmap = board(0);
