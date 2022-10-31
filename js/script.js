@@ -6,35 +6,60 @@ var levels = [tileMap01, tileMap02, tileMap03];
 var level = 0;
 var temp = "E";
 var map;
-var map = levels[level].mapGrid;
+/*var map = levels[level].mapGrid;*/
 
-function buildMap(currentLevel) {
+/*function buildMap(currentLevel) {
   var map = levels[currentLevel].mapGrid;
-  for (y = 0; y < map.length; y++) {
-    for (x = 0; x < map[y].length; x++) {
+  map.forEach((row, y) => {
+    row.forEach((value, x) => {
       let element = document.createElement("div");
-      gamemap.appendChild(element).className = map[y][x];
+      gamemap.appendChild(element).className = value[0];
       gamemap.appendChild(element).id = `${y},${x}`;
-    }
-  }
+    });
+  });
+}*/
+
+function board(currentLevel) {
+  const input_map = levels[currentLevel].mapGrid;
+  let output_map = [];
+  input_map.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value[0] == " ") output_map.push([x, y, "E"]);
+      else output_map.push([x, y, value[0]]);
+    });
+  });
+  return output_map;
 }
 
-buildMap(level);
+function drawBoard(board) {
+  document.getElementById("gamemap").remove();
+  let gamemap = document.createElement("div");
+  document.body.appendChild(gamemap).id = "gamemap";
+  board.forEach((block) => {
+    let element = document.createElement("div");
+    gamemap.appendChild(element).id = `${block[1]},${block[0]}`;
+    gamemap.appendChild(element).className = block[2];
+  });
+}
 
-/*function readKey(event) {
+var nmap = board(0);
+drawBoard(nmap);
+
+function readKey(event) {
   switch (event.key) {
     case "ArrowRight":
+      var nnmap = board(1);
+      drawBoard(nnmap);
       tryMove(0, 1);
       break;
-
     case "ArrowLeft":
+      var nmap = board(0);
+      drawBoard(nmap);
       tryMove(0, -1);
       break;
-
     case "ArrowDown":
       tryMove(1, 0);
       break;
-
     case "ArrowUp":
       tryMove(-1, 0);
       break;
@@ -112,8 +137,3 @@ function moveBox(posY, posX, y, x, current, movePos) {
   document.getElementById(`${posY},${posX}`).className = movePos;
   move(y, x);
 }
-*/
-
-/*
-  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-  */
