@@ -9,21 +9,21 @@ var map;
 
 function board(currentLevel) {
   const input_map = levels[currentLevel].mapGrid;
-  let board_struct = new Map();
+  let board_struct = new Array();
   input_map.forEach((row, y) => {
     row.forEach((value, x) => {
       switch (value[0]) {
         case " ":
-          board_struct.set(`${x},${y}`, ["E", "E"]);
+          board_struct.push([x, y, "E", "E"]);
           break;
         case "W":
-          board_struct.set(`${x},${y}`, ["W", "W"]);
+          board_struct.push([x, y, "W", "W"]);
           break;
         case "G":
-          board_struct.set(`${x},${y}`, ["G", "G"]);
+          board_struct.push([x, y, "G", "G"]);
           break;
         default:
-          board_struct.set(`${x},${y}`, ["E", value[0]]);
+          board_struct.push([x, y, "E", value[0]]);
           break;
       }
     });
@@ -35,12 +35,11 @@ function drawBoard(board) {
   document.getElementById("gamemap").remove();
   let gamemap = document.createElement("div");
   document.body.appendChild(gamemap).id = "gamemap";
-  const iterator1 = board[Symbol.iterator]();
-  for (const item of iterator1) {
+  board.forEach((item) => {
     let element = document.createElement("div");
-    gamemap.appendChild(element).id = item[0];
-    gamemap.appendChild(element).className = item[1].join("");
-  }
+    gamemap.appendChild(element).id = `${item[0]},${item[1]}`;
+    gamemap.appendChild(element).className = `${item[2]}${item[3]}`;
+  });
 }
 
 var game_state = board(0);
@@ -69,17 +68,20 @@ function readKey(event) {
 
 document.addEventListener("keydown", readKey);
 
-function getPlayerCoords(map) {
-  for (let [key, value] of map.entries()) {
-      if (value[1] == "P")
-	  return key.split(",");
-  }
+function getPlayerCoords(board) {
+    let player;
+  board.forEach((item) => {
+      if (item[3] == "P") {
+	  player = item;}
+  });
+    return player;
 }
 
+console.log(getPlayerCoords(game_state));
 
 function moveH(map, x) {
-    let playerCoord = getPlayerCoords(map);
-    console.log(typeof playerCoord[0]);
+  let playerCoord = getPlayerCoords(map);
+  console.log(typeof playerCoord[0]);
 }
 
 moveH(game_state);
