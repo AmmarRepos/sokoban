@@ -21,12 +21,13 @@ body {
   color: white;
 }
 
-.W,
-.B,
-.G,
-.P,
-.E,
-.BG {
+
+
+.EB,
+.GG,
+.EP,
+.EE,
+.BG, .WW {
   background-size: cover;
 }
 
@@ -34,22 +35,22 @@ body {
   background-image: url("images/ScoreBox.png");
 }
 
-.W {
+.WW {
   background-image: url("images/Wall.png");
 }
 
-.G {
+.GG {
   background-image: url("images/Goal.png");
 }
 
-.B {
+.EB {
   background-image: url("images/Box.png");
 }
 
-.P {
+.EP {
   background-image: url("images/Player.png");
 }
 
-.E {
+.EE {
   background-image: url("images/Floor.png");
 }

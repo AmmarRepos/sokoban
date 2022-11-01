@@ -12,8 +12,20 @@ function board(currentLevel) {
   let board_struct = new Map();
   input_map.forEach((row, y) => {
     row.forEach((value, x) => {
-      if (value[0] == " ") board_struct.set(`${x},${y}`, "E");
-      else board_struct.set(`${x},${y}`, value[0]);
+      switch (value[0]) {
+        case " ":
+          board_struct.set(`${x},${y}`, ["E", "E"]);
+	  break;
+        case "W":
+          board_struct.set(`${x},${y}`, ["W", "W"]);
+	  break;
+        case "G":
+          board_struct.set(`${x},${y}`, ["G", "G"]);
+	  break;
+        default:
+          board_struct.set(`${x},${y}`, ["E", value[0]]);
+	  break;
+      }
     });
   });
   return board_struct;
@@ -27,7 +39,7 @@ function drawBoard(board) {
   for (const item of iterator1) {
     let element = document.createElement("div");
     gamemap.appendChild(element).id = item[0];
-    gamemap.appendChild(element).className = item[1];
+      gamemap.appendChild(element).className = item[1].join("");
   }
 }
 
