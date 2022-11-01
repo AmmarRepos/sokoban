@@ -6,12 +6,12 @@ body {
   background-color: lightslategrey;
 }
 
-#gamemap {
+#board {
   display: grid;
   grid-template-columns: repeat(19, auto);
 }
 
-#gamemap div {
+#board div {
   width: 45px;
   height: 45px;
   outline: 1px solid black;
@@ -21,13 +21,12 @@ body {
   color: white;
 }
 
-
-
-.EB,
-.GG,
-.EP,
-.EE,
-.BG, .WW {
+.W,
+.B,
+.G,
+.P,
+.E,
+.BG {
   background-size: cover;
 }
 
@@ -35,22 +34,22 @@ body {
   background-image: url("images/ScoreBox.png");
 }
 
-.WW {
+.W {
   background-image: url("images/Wall.png");
 }
 
-.GG {
+.G {
   background-image: url("images/Goal.png");
 }
 
-.EB {
+.B {
   background-image: url("images/Box.png");
 }
 
-.EP {
+.P {
   background-image: url("images/Player.png");
 }
 
-.EE {
+.E {
   background-image: url("images/Floor.png");
 }

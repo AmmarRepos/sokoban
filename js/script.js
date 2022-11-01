@@ -1,90 +1,75 @@
-var gamemap = document.getElementById("gamemap");
-var playerX = 10;
-var playerY = 9;
+var board = document.getElementById("board");
+var playerX = 0;
+var playerY = 0;
 var goalAmount = 0;
 var levels = [tileMap01, tileMap02, tileMap03];
 var level = 0;
 var temp = "E";
-var map;
 
-function board(currentLevel) {
-  const input_map = levels[currentLevel].mapGrid;
-  let board_struct = new Array();
-  input_map.forEach((row, y) => {
-    row.forEach((value, x) => {
-      switch (value[0]) {
-        case " ":
-          board_struct.push([x, y, "E", "E"]);
-          break;
-        case "W":
-          board_struct.push([x, y, "W", "W"]);
-          break;
-        case "G":
-          board_struct.push([x, y, "G", "G"]);
-          break;
-        default:
-          board_struct.push([x, y, "E", value[0]]);
-          break;
-      }
-    });
-  });
-  return board_struct;
-}
-
-function drawBoard(board) {
-  document.getElementById("gamemap").remove();
-  let gamemap = document.createElement("div");
-  document.body.appendChild(gamemap).id = "gamemap";
-  board.forEach((item) => {
-    let element = document.createElement("div");
-    gamemap.appendChild(element).id = `${item[0]},${item[1]}`;
-    gamemap.appendChild(element).className = `${item[2]}${item[3]}`;
-  });
-}
-
-var game_state = board(0);
-drawBoard(game_state);
-
-function readKey(event) {
-  switch (event.key) {
+function readKey(e) {
+  e.preventDefault();
+  switch (e.key) {
     case "ArrowRight":
-      var nnmap = board(1);
-      drawBoard(nnmap);
       tryMove(0, 1);
       break;
+
     case "ArrowLeft":
-      var nmap = board(0);
-      drawBoard(nmap);
       tryMove(0, -1);
       break;
+
     case "ArrowDown":
       tryMove(1, 0);
       break;
+
     case "ArrowUp":
       tryMove(-1, 0);
       break;
   }
 }
 
-document.addEventListener("keydown", readKey);
+document.addEventListener("keydown", readKey, false);
 
-function getPlayerCoords(board) {
-    let player;
-  board.forEach((item) => {
-      if (item[3] == "P") {
-	  player = item;}
+function drawBoard(currentLevel) {
+  var map = levels[currentLevel].mapGrid;
+  map.forEach((row, i) => {
+    row.forEach((value, j) => {
+      let element = document.createElement("div");
+      if (value == " ") {
+        board.appendChild(element).className = "E";
+      } else if (value == "P") {
+        playerY = i;
+        playerX = j;
+        board.appendChild(element).className = value;
+      } else {
+        board.appendChild(element).className = value;
+      }
+      board.appendChild(element).id = `${i},${j}`;
+    });
   });
-    return player;
+  goalAmount = document.getElementsByClassName("G").length;
 }
 
-console.log(getPlayerCoords(game_state));
-
-function moveH(map, x) {
-  let playerCoord = getPlayerCoords(map);
-  console.log(typeof playerCoord[0]);
+function nextLevel() {
+  level++;
+  board.innerHTML = "";
+  drawBoard(level);
 }
 
-moveH(game_state);
+function finishGame() {
+  alert("You have completed the Game!");
+  board.innerHTML = "Refersh the page to start again";
+}
+
+function checkWinning() {
+  if (goalAmount == document.getElementsByClassName("BG").length) {
+    alert(`You finished level ${level}!`);
+    if (level < levels.length - 1) {
+      setTimeout(nextLevel, 100);
+    } else {
+      setTimeout(finsihGame, 100);
+    }
+  }
+}
 
 function move(y, x) {
   document.getElementById(`${playerY},${playerX}`).className = temp;
@@ -92,13 +77,34 @@ function move(y, x) {
   playerY += y;
   temp = document.getElementById(`${playerY},${playerX}`).className;
   document.getElementById(`${playerY},${playerX}`).className = "P";
-  checkIfWin();
+  checkWinning();
 }
 
-function getGoal() {
-  return document.getElementsByClassName("G").length;
+function moveBox(posY, posX, y, x, current, movePos) {
+  document.getElementById(`${posY},${posX}`).className = current;
+  posX += x;
+  posY += y;
+  document.getElementById(`${posY},${posX}`).className = movePos;
+  move(y, x);
 }
-goalAmount = getGoal(document);
+
+function checkBoxOnGoal(posY, posX, y, x) {
+  var positionCheck = document.getElementById(`${posY + y},${posX + x}`);
+  if (positionCheck.className == "E") {
+    moveBox(posY, posX, y, x, "G", "B");
+  } else if (positionCheck.className == "G") {
+    moveBox(posY, posX, y, x, "G", "BG");
+  }
+}
+
+function checkBox(posY, posX, y, x) {
+  var positionCheck = document.getElementById(`${posY + y},${posX + x}`);
+  if (positionCheck.className == "E") {
+    moveBox(posY, posX, y, x, "E", "B");
+  } else if (positionCheck.className == "G") {
+    moveBox(posY, posX, y, x, "E", "BG");
+  }
+}
 
 function tryMove(y, x) {
   var positionCheck = document.getElementById(`${playerY + y},${playerX + x}`);
@@ -113,45 +119,4 @@ function tryMove(y, x) {
   }
 }
 
-function checkBox(posY, posX, y, x) {
-  var positionCheck = document.getElementById(`${posY + y},${posX + x}`);
-  if (positionCheck.className == "E") {
-    moveBox(posY, posX, y, x, "E", "B");
-  } else if (positionCheck.className == "G") {
-    moveBox(posY, posX, y, x, "E", "BG");
-  }
-}
-
-function checkBoxOnGoal(posY, posX, y, x) {
-  var positionCheck = document.getElementById(`${posY + y},${posX + x}`);
-  if (positionCheck.className == "E") {
-    moveBox(posY, posX, y, x, "G", "B");
-  } else if (positionCheck.className == "G") {
-    moveBox(posY, posX, y, x, "G", "BG");
-  }
-}
-
-function checkIfWin() {
-  if (goalAmount == document.getElementsByClassName("BG").length) {
-    if (level < levels.length - 1) {
-      setTimeout(function () {
-        level++;
-        gamemap.innerHTML = "";
-        buildMap(level);
-      }, 100);
-    } else {
-      setTimeout(function () {
-        alert("Du vann");
-        gamemap.innerHTML = "Ctrl + R om du vill börja om";
-      }, 100);
-    }
-  }
-}
-
-function moveBox(posY, posX, y, x, current, movePos) {
-  document.getElementById(`${posY},${posX}`).className = current;
-  posX += x;
-  posY += y;
-  document.getElementById(`${posY},${posX}`).className = movePos;
-  move(y, x);
-}
+drawBoard(level);
