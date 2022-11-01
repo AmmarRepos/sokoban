@@ -15,16 +15,16 @@ function board(currentLevel) {
       switch (value[0]) {
         case " ":
           board_struct.set(`${x},${y}`, ["E", "E"]);
-	  break;
+          break;
         case "W":
           board_struct.set(`${x},${y}`, ["W", "W"]);
-	  break;
+          break;
         case "G":
           board_struct.set(`${x},${y}`, ["G", "G"]);
-	  break;
+          break;
         default:
           board_struct.set(`${x},${y}`, ["E", value[0]]);
-	  break;
+          break;
       }
     });
   });
@@ -39,12 +39,12 @@ function drawBoard(board) {
   for (const item of iterator1) {
     let element = document.createElement("div");
     gamemap.appendChild(element).id = item[0];
-      gamemap.appendChild(element).className = item[1].join("");
+    gamemap.appendChild(element).className = item[1].join("");
   }
 }
 
-var nmap = board(0);
-drawBoard(nmap);
+var game_state = board(0);
+drawBoard(game_state);
 
 function readKey(event) {
   switch (event.key) {
@@ -68,6 +68,21 @@ function readKey(event) {
 }
 
 document.addEventListener("keydown", readKey);
+
+function getPlayerCoords(map) {
+  for (let [key, value] of map.entries()) {
+      if (value[1] == "P")
+	  return key.split(",");
+  }
+}
+
+
+function moveH(map, x) {
+    let playerCoord = getPlayerCoords(map);
+    console.log(typeof playerCoord[0]);
+}
+
+moveH(game_state);
 
 function move(y, x) {
   document.getElementById(`${playerY},${playerX}`).className = temp;
